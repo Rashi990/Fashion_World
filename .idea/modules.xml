@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Fashion World/Fashion-World/Fashion-World.iml" filepath="$PROJECT_DIR$/Fashion World/Fashion-World/Fashion-World.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Fashion_World.iml" filepath="$PROJECT_DIR$/.idea/Fashion_World.iml" />
+    </modules>
+  </component>
+</project>
