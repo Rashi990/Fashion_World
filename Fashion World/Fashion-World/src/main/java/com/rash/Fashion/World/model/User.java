@@ -24,15 +24,21 @@ public class User {
     private String fullName;
     private String email;
     private String password;
-    private USER_ROLE role;
+    private USER_ROLE role=USER_ROLE.ROLE_CUSTOMER;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private List<Order> orders = new ArrayList<>();
+    private List<PurchaseOrder> orders = new ArrayList<>();
 
     @ElementCollection
     private List<ShopDTO>favorites=new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
+
+    // Add explicit getter method
+//    public USER_ROLE getRole() {
+//        return this.role;
+//    }
+
 }

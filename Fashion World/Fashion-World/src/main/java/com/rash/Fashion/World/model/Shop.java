@@ -37,7 +37,7 @@ public class Shop {
     private String openingHours;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true) //not creating separate table and use the data in shop table
-    private List<Order> orders = new ArrayList<>();
+    private List<PurchaseOrder> orders = new ArrayList<>();
 
     @ElementCollection
     @Column(length = 1000)
