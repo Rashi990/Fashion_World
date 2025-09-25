@@ -28,14 +28,24 @@ public class AppConfig {
 
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize -> Authorize
+                        // Public endpoints
+                        .requestMatchers(
+                                "/",                    // Home page
+                                "/api/v1/auth/**").permitAll() // Allow public access to authentication endpoints
+
+                        // Admin endpoints
                         .requestMatchers("/api/admin/**").hasAnyRole("SHOP OWNER", "ADMIN") //if any api end point starting from api/admin - only the uses having these roles can access admin api endpoints, other users cannot access these
+
+                        // Authenticated endpoints
                         .requestMatchers("/api/**").authenticated() //if any api staring from this,by providing jwt token user will be able to access all these api endpoints, regardless user role
+
+                        // All other requests
                         .anyRequest().permitAll() //all the users can access these endpoints(no matter of roles or no need to have jwt tokens), only permit auth signup & sign in
                 ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        return null;
+        return http.build();
     }
 
         private CorsConfigurationSource corsConfigurationSource() {
@@ -46,7 +56,7 @@ public class AppConfig {
                     CorsConfiguration cfg = new CorsConfiguration();
 
                     cfg.setAllowedOrigins(Arrays.asList(
-                            "http://localhost:3000/"
+                            "http://localhost:3000"
                     ));
                     cfg.setAllowedMethods(Collections.singletonList("*"));
                     cfg.setAllowCredentials(true);

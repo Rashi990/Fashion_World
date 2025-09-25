@@ -15,21 +15,11 @@ import java.util.Set;
 
 @Service
 public class JwtProvider {
-
-//    private byte[] key = JwtConstant.SECRET_KEY.getBytes();
     private SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
-
 
     public String generateToken(Authentication auth){
         Collection<?extends GrantedAuthority>authorities=auth.getAuthorities();
         String roles = populateAuthorities(authorities);
-
-//        String jwt = Jwts.builder().setIssuedAt(new Date())
-//                .setExpiration(new Date(new Date().getTime()+864000))
-//                .claim("email",auth.getName())
-//                .claim("authorities",roles)
-//                .signWith(key)
-//                .compact();
 
         String jwt = Jwts.builder()
                 .issuedAt(new Date())
@@ -41,19 +31,6 @@ public class JwtProvider {
 
         return jwt;
     }
-
-//    public String getEmailFromJwtToken(String jwt){
-//        jwt = jwt.substring(7);
-//
-//        Claims claims = Jwts.parser()
-//                .setSigningKey(key)
-//                .build()
-//                .parseClaimsJws(jwt)
-//                .getBody();
-//
-//        String email = String.valueOf(claims.get("email"));
-//        return email;
-//    }
 
     public String getEmailFromJwtToken(String jwt){
         if (jwt != null && jwt.startsWith("Bearer ")) {
