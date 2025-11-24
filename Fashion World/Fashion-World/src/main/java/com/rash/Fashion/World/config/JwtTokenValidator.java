@@ -28,10 +28,10 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String jwt = request.getHeader(JwtConstant.JWT_HEADER);
+        String jwtHeader = request.getHeader(JwtConstant.JWT_HEADER);
 
-        if (jwt!=null && jwt.startsWith("Bearer ")){
-            jwt = jwt.substring(7);
+        if (jwtHeader!=null && jwtHeader.startsWith("Bearer ")){
+            String jwt = jwtHeader.substring(7);
 
             try {
                 Claims claims = Jwts.parser()
@@ -41,11 +41,20 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                         .getPayload();  // Changed from getBody()
 
 
+//            try {
+//                Claims claims = Jwts.parserBuilder()
+//                        .setSigningKey(key)
+//                        .build()
+//                        .parseClaimsJws(jwt)
+//                        .getBody();
+
                 String email = String.valueOf(claims.get("email"));
                 String authorities = String.valueOf((claims.get("authorities")));
 
                 List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+
                 Authentication authentication = new UsernamePasswordAuthenticationToken(email,null,auth);
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e) {

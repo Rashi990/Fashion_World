@@ -34,7 +34,7 @@ public class AppConfig {
                                 "/api/v1/auth/**").permitAll() // Allow public access to authentication endpoints
 
                         // Admin endpoints
-                        .requestMatchers("/api/admin/**").hasAnyRole("SHOP OWNER", "ADMIN") //if any api end point starting from api/admin - only the uses having these roles can access admin api endpoints, other users cannot access these
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole("SHOP OWNER", "ADMIN") //if any api end point starting from api/admin - only the uses having these roles can access admin api endpoints, other users cannot access these
 
                         // Authenticated endpoints
                         .requestMatchers("/api/**").authenticated() //if any api staring from this,by providing jwt token user will be able to access all these api endpoints, regardless user role
