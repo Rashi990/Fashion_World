@@ -28,6 +28,8 @@ public class Shop {
 
     private String description;
 
+    private String type;
+
     @OneToOne
     private Address address;
 
