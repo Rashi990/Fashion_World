@@ -24,7 +24,7 @@ public class Shop {
     @OneToOne
     private User owner;
 
-    private String name;
+    private String shopName;
 
     private String description;
 

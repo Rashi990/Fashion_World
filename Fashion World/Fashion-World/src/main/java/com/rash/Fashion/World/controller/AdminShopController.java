@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/shops")
+@RequestMapping("/api/v1/admin/shop")
 
 public class AdminShopController {
 
@@ -47,7 +47,6 @@ public class AdminShopController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteShop(
-            @RequestBody CreateShopRequest request,
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
     ) throws Exception {
@@ -62,7 +61,6 @@ public class AdminShopController {
 
     @PutMapping("/{id}/status")
     public ResponseEntity<Shop> updateShopStatus(
-            @RequestBody CreateShopRequest request,
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
     ) throws Exception {
@@ -75,7 +73,6 @@ public class AdminShopController {
 
     @GetMapping("/user")
     public ResponseEntity<Shop> findShopByUserId(
-            @RequestBody CreateShopRequest request,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);

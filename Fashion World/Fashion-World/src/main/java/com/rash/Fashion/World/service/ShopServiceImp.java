@@ -38,7 +38,7 @@ public class ShopServiceImp implements ShopService{
         shop.setType(request.getType());
         shop.setDescription(request.getDescription());
         shop.setImages(request.getImages());
-        shop.setName(request.getShopName());
+        shop.setShopName(request.getShopName());
         shop.setOpeningHours(request.getOpeningHours());
         shop.setRegistrationDate(LocalDateTime.now());
         shop.setOwner(user);
@@ -59,8 +59,8 @@ public class ShopServiceImp implements ShopService{
             shop.setDescription(updatedShop.getDescription());
         }
 
-        if (shop.getName()!=null){
-            shop.setName(updatedShop.getShopName());
+        if (shop.getShopName()!=null){
+            shop.setShopName(updatedShop.getShopName());
         }
 
         return shopRepository.save(shop);
@@ -111,14 +111,29 @@ public class ShopServiceImp implements ShopService{
 
         ShopDTO shopDTO = new ShopDTO();
         shopDTO.setDescription(shop.getDescription());
-        shopDTO.setTitle(shop.getName());
+        shopDTO.setTitle(shop.getShopName());
         shopDTO.setImages(shop.getImages());
         shopDTO.setId(shopId);
 
-        if (user.getFavorites().contains(shopDTO)){
-            user.getFavorites().remove(shopDTO);
+//        if (user.getFavorites().contains(shopDTO)){
+//            user.getFavorites().remove(shopDTO);
+//        }
+//        else user.getFavorites().add(shopDTO);
+
+        boolean isFavorited = false;
+        List<ShopDTO> favorites = user.getFavorites();
+        for (ShopDTO favorite : favorites){
+            if (favorite.getId().equals(shopId)){
+                isFavorited = true;
+                break;
+            }
         }
-        else user.getFavorites().add(shopDTO);
+
+        if (isFavorited){
+            favorites.removeIf(favorite -> favorite.getId().equals(shopId));
+        }else {
+            favorites.add(shopDTO);
+        }
 
         userRepository.save(user);
         return shopDTO;
