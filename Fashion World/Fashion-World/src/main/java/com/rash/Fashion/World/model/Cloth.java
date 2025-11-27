@@ -19,7 +19,7 @@ public class Cloth {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    private String clothName;
     private String description;
     private Long price;
 
