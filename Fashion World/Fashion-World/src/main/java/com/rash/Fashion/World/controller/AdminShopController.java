@@ -42,7 +42,7 @@ public class AdminShopController {
         User user = userService.findUserByJwtToken(jwt);
 
         Shop shop = shopService.updateShop(id, request);
-        return new ResponseEntity<>(shop, HttpStatus.CREATED);
+        return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

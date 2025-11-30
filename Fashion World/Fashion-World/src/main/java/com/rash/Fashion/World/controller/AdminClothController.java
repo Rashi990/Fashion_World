@@ -39,8 +39,6 @@ public class AdminClothController {
         User user = userService.findUserByJwtToken(jwt);
         Shop shop = shopService.findShopById(request.getShopId());
 
-//        Cloth cloth = clothService.createCloth(request, request.getClothCategory(),shop);
-
         // Fetch category by ID
         Category category = categoryService.findCategoryById(request.getClothCategoryId());
 
@@ -59,7 +57,7 @@ public class AdminClothController {
         MessageResponse response = new MessageResponse();
         response.setMessage("Cloth is deleted successfully");
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

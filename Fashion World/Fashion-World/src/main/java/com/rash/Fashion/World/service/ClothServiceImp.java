@@ -28,7 +28,6 @@ public class ClothServiceImp implements ClothService{
         cloth.setImages(request.getImages());
         cloth.setPrice(request.getPrice());
         cloth.setColors(request.getColors());
-//        cloth.setFemale(request.isGender());
         cloth.setAvailable(request.isAvailable());
 
         // Default gender
@@ -67,17 +66,13 @@ public class ClothServiceImp implements ClothService{
 
         List<Cloth> cloths = clothRepository.findByShopId(shopId);
 
-//        if (isMale){
-//            cloths = filterByMale(cloths);
-//        }
-//
-//        if (isFemale) {
-//            cloths = filterByFemale(cloths);
-//        }
-
-//        if (isFemale){
-//            cloths = filterByFemale(cloths,isFemale);
-//        }
+        // Apply gender filters only if one of them is true
+        if (isMale && !isFemale) {       // Only male requested
+            cloths = filterByMale(cloths);
+        } else if (!isMale && isFemale) { // Only female requested
+            cloths = filterByFemale(cloths);
+        }
+            // if both are true or both are false, return all (no filtering)
 
         if (clothCategory!=null && !clothCategory.equals("")){
             cloths = filterByCategory(cloths,clothCategory);
@@ -95,7 +90,6 @@ public class ClothServiceImp implements ClothService{
         }).collect(Collectors.toList());
     }
 
-
     private List<Cloth> filterByMale(List<Cloth> cloths) {
         return cloths.stream().filter(cloth -> cloth.isMale()).collect(Collectors.toList());
     }
@@ -103,15 +97,6 @@ public class ClothServiceImp implements ClothService{
     private List<Cloth> filterByFemale(List<Cloth> cloths) {
         return cloths.stream().filter(cloth -> cloth.isFemale()).collect(Collectors.toList());
     }
-
-
-//    private List<Cloth> filterByFemale(List<Cloth> cloths, boolean isFemale) {
-//        return cloths.stream().filter(cloth -> cloth.isFemale()==isFemale).collect(Collectors.toList());
-//    }
-//
-//    private List<Cloth> filterByMale(List<Cloth> cloths, boolean isMale) {
-//        return cloths.stream().filter(cloth -> cloth.isMale() == isMale).collect(Collectors.toList());
-//    }
 
     @Override
     public List<Cloth> searchCloth(String keyword) {
