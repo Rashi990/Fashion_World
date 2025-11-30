@@ -21,6 +21,7 @@ public class Cloth {
 
     private String clothName;
     private String description;
+
     private Long price;
 
     @ManyToOne

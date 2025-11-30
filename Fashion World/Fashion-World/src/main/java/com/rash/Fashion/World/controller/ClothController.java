@@ -35,7 +35,7 @@ public class ClothController {
 
         List<Cloth> cloths = clothService.searchCloth(name);
 
-        return new ResponseEntity<>(cloths, HttpStatus.CREATED);
+        return new ResponseEntity<>(cloths, HttpStatus.OK);
     }
 
     @GetMapping("/shop/{shopId}")

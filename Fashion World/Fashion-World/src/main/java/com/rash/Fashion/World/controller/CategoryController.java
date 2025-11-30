@@ -1,0 +1,48 @@
+package com.rash.Fashion.World.controller;
+
+import com.rash.Fashion.World.model.Category;
+import com.rash.Fashion.World.model.Shop;
+import com.rash.Fashion.World.model.User;
+import com.rash.Fashion.World.service.CategoryService;
+import com.rash.Fashion.World.service.ShopService;
+import com.rash.Fashion.World.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1")
+public class CategoryController {
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ShopService shopService;
+
+    @PostMapping("/admin/category")
+    public ResponseEntity<Category> createCategory(
+            @RequestBody Category category,
+            @RequestHeader("Authorization")String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+
+        Category createdCategory = categoryService.createCategory(category.getCategoryName(), user.getId());
+        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/category/shop")
+    public ResponseEntity<List<Category>> getShopCategory(
+            @RequestHeader("Authorization")String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+
+        Shop shop = shopService.getShopByUserId(user.getId());
+        List<Category> categories = categoryService.findCategoryByShopId(shop.getId());
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+}
