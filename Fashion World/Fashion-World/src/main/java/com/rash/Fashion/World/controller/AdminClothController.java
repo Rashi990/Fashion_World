@@ -1,10 +1,12 @@
 package com.rash.Fashion.World.controller;
 
+import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Cloth;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.request.CreateClothRequest;
 import com.rash.Fashion.World.response.MessageResponse;
+import com.rash.Fashion.World.service.CategoryService;
 import com.rash.Fashion.World.service.ClothService;
 import com.rash.Fashion.World.service.ShopService;
 import com.rash.Fashion.World.service.UserService;
@@ -27,14 +29,22 @@ public class AdminClothController {
     @Autowired
     private ShopService shopService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @PostMapping
     public ResponseEntity<Cloth> createCloth(
             @RequestBody CreateClothRequest request,
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
         Shop shop = shopService.findShopById(request.getShopId());
-        Cloth cloth = clothService.createCloth(request, request.getClothCategory(),shop);
 
+//        Cloth cloth = clothService.createCloth(request, request.getClothCategory(),shop);
+
+        // Fetch category by ID
+        Category category = categoryService.findCategoryById(request.getClothCategoryId());
+
+        Cloth cloth = clothService.createCloth(request,category,shop);
         return new ResponseEntity<>(cloth, HttpStatus.CREATED);
     }
 

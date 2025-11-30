@@ -40,8 +40,8 @@ public class ClothController {
 
     @GetMapping("/shop/{shopId}")
     public ResponseEntity<List<Cloth>> getShopCloth(
-            @RequestParam boolean male,
-            @RequestParam boolean female,
+            @RequestParam(required = false) boolean male,
+            @RequestParam(required = false) boolean female,
             @RequestParam(required = false) String cloth_category,
             @PathVariable Long shopId,
             @RequestHeader("Authorization") String jwt) throws Exception{

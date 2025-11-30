@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,11 +37,19 @@ public class Cloth {
     @ManyToOne // inside one shop multiple cloths
     private Shop shop;
 
+    @Column(nullable = false)
     private boolean isMale;
+
+    @Column(nullable = false)
     private boolean isFemale;
 
     @ManyToMany
     private List<ColorItem> colors= new ArrayList<>();
 
-    private Date creationDate;
+    private LocalDateTime creationDate;
+
+    @PrePersist
+    protected void onCreate(){
+        creationDate = LocalDateTime.now();
+    }
 }

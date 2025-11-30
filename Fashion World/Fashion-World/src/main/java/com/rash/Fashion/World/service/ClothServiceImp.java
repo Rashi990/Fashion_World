@@ -28,7 +28,20 @@ public class ClothServiceImp implements ClothService{
         cloth.setImages(request.getImages());
         cloth.setPrice(request.getPrice());
         cloth.setColors(request.getColors());
-        cloth.setFemale(request.isGender());
+//        cloth.setFemale(request.isGender());
+        cloth.setAvailable(request.isAvailable());
+
+        // Default gender
+        cloth.setMale(false);
+        cloth.setFemale(false);
+
+        // Gender mapping using enum
+        if(request.getGender() != null){
+            switch(request.getGender()){
+                case MALE -> { cloth.setMale(true); cloth.setFemale(false); }
+                case FEMALE -> { cloth.setMale(false); cloth.setFemale(true); }
+            }
+        }
 
         Cloth savedCloth = clothRepository.save(cloth);
         shop.getCloths().add(savedCloth);
@@ -54,13 +67,17 @@ public class ClothServiceImp implements ClothService{
 
         List<Cloth> cloths = clothRepository.findByShopId(shopId);
 
-        if (isMale){
-            cloths = filterByMale(cloths,isMale);
-        }
+//        if (isMale){
+//            cloths = filterByMale(cloths);
+//        }
+//
+//        if (isFemale) {
+//            cloths = filterByFemale(cloths);
+//        }
 
-        if (isFemale){
-            cloths = filterByFemale(cloths,isFemale);
-        }
+//        if (isFemale){
+//            cloths = filterByFemale(cloths,isFemale);
+//        }
 
         if (clothCategory!=null && !clothCategory.equals("")){
             cloths = filterByCategory(cloths,clothCategory);
@@ -78,13 +95,23 @@ public class ClothServiceImp implements ClothService{
         }).collect(Collectors.toList());
     }
 
-    private List<Cloth> filterByFemale(List<Cloth> cloths, boolean isFemale) {
-        return cloths.stream().filter(cloth -> cloth.isFemale()==isFemale).collect(Collectors.toList());
+
+    private List<Cloth> filterByMale(List<Cloth> cloths) {
+        return cloths.stream().filter(cloth -> cloth.isMale()).collect(Collectors.toList());
     }
 
-    private List<Cloth> filterByMale(List<Cloth> cloths, boolean isMale) {
-        return cloths.stream().filter(cloth -> cloth.isMale() == isMale).collect(Collectors.toList());
+    private List<Cloth> filterByFemale(List<Cloth> cloths) {
+        return cloths.stream().filter(cloth -> cloth.isFemale()).collect(Collectors.toList());
     }
+
+
+//    private List<Cloth> filterByFemale(List<Cloth> cloths, boolean isFemale) {
+//        return cloths.stream().filter(cloth -> cloth.isFemale()==isFemale).collect(Collectors.toList());
+//    }
+//
+//    private List<Cloth> filterByMale(List<Cloth> cloths, boolean isMale) {
+//        return cloths.stream().filter(cloth -> cloth.isMale() == isMale).collect(Collectors.toList());
+//    }
 
     @Override
     public List<Cloth> searchCloth(String keyword) {
