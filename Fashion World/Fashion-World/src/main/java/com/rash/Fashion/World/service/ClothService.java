@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.service;
 
+import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Cloth;
 import com.rash.Fashion.World.model.Shop;

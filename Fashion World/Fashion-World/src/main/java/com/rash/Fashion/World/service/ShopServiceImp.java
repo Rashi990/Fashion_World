@@ -1,6 +1,7 @@
 package com.rash.Fashion.World.service;
 
 import com.rash.Fashion.World.dto.ShopDTO;
+import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Address;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.model.User;
@@ -8,6 +9,7 @@ import com.rash.Fashion.World.repository.AddressRepository;
 import com.rash.Fashion.World.repository.ShopRepository;
 import com.rash.Fashion.World.repository.UserRepository;
 import com.rash.Fashion.World.request.CreateShopRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,21 @@ public class ShopServiceImp implements ShopService{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
+    // Convert Entity → DTO
+    private ShopResponseDTO convertToDTO(Shop shop){
+        return modelMapper.map(shop, ShopResponseDTO.class);
+    }
+
+    // Convert Entity List → DTO List
+    private List<ShopResponseDTO> convertToDTOList(List<Shop> shops) {
+        return shops.stream().map(this::convertToDTO).toList();
+    }
+
     @Override
-    public Shop createShop(CreateShopRequest request, User user) {
+    public ShopResponseDTO createShop(CreateShopRequest request, User user) {
 
         Address address = addressRepository.save(request.getAddress());
 
@@ -43,11 +58,13 @@ public class ShopServiceImp implements ShopService{
         shop.setRegistrationDate(LocalDateTime.now());
         shop.setOwner(user);
 
-        return shopRepository.save(shop);
+        shopRepository.save(shop);
+        return convertToDTO(shop);
+
     }
 
     @Override
-    public Shop updateShop(Long shopId, CreateShopRequest updatedShop) throws Exception {
+    public ShopResponseDTO updateShop(Long shopId, CreateShopRequest updatedShop) throws Exception {
 
         Shop shop = findShopById(shopId);
 
@@ -63,25 +80,26 @@ public class ShopServiceImp implements ShopService{
             shop.setShopName(updatedShop.getShopName());
         }
 
-        return shopRepository.save(shop);
+        shopRepository.save(shop);
+        return convertToDTO(shop);
     }
 
     @Override
     public void deleteShop(Long shopId) throws Exception {
-
         Shop shop = findShopById(shopId);
-
         shopRepository.delete(shop);
     }
 
     @Override
-    public List<Shop> getAllShops() {
-        return shopRepository.findAll();
+    public List<ShopResponseDTO> getAllShops() {
+        List<Shop> shops = shopRepository.findAll();
+        return convertToDTOList(shops);
     }
 
     @Override
-    public List<Shop> searchShop(String keyword) {
-        return shopRepository.findBySearchQuery(keyword);
+    public List<ShopResponseDTO> searchShop(String keyword) {
+        List<Shop> shops = shopRepository.findBySearchQuery(keyword);
+        return convertToDTOList(shops);
     }
 
     @Override
@@ -95,14 +113,24 @@ public class ShopServiceImp implements ShopService{
     }
 
     @Override
-    public Shop getShopByUserId(Long userId) throws Exception {
-
+    public ShopResponseDTO getShopByUserId(Long userId) throws Exception {
         Shop shop = shopRepository.findByOwnerId(userId);
         if (shop==null){
             throw new Exception("Shop not found with owner id"+userId);
         }
-        return shop;
+        return convertToDTO(shop);
     }
+
+    @Override
+    public Shop getShopEntityByUserId(Long userId) throws Exception {
+        Shop shop = shopRepository.findByOwnerId(userId);
+
+        if (shop == null) {
+            throw new Exception("Shop not found with owner id " + userId);
+        }
+        return shop;  // returning entity
+    }
+
 
     @Override
     public ShopDTO addFavourites(Long shopId, User user) throws Exception {
@@ -140,10 +168,11 @@ public class ShopServiceImp implements ShopService{
     }
 
     @Override
-    public Shop updateShopStatus(Long id) throws Exception {
+    public ShopResponseDTO updateShopStatus(Long id) throws Exception {
 
         Shop shop = findShopById(id);
         shop.setOpen(!shop.isOpen());
-        return shopRepository.save(shop);
+        shopRepository.save(shop);
+        return convertToDTO(shop);
     }
 }

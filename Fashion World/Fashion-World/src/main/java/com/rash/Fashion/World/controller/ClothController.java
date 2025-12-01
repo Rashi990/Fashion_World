@@ -33,7 +33,12 @@ public class ClothController {
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
 
-        List<Cloth> cloths = clothService.searchCloth(name);
+        if(name == null || name.isEmpty()){
+            return new ResponseEntity<>(List.of(), HttpStatus.OK);
+        }
+
+        String keyword = name.trim(); // no need to lowercase here; handled in service
+        List<Cloth> cloths = clothService.searchCloth(keyword);
 
         return new ResponseEntity<>(cloths, HttpStatus.OK);
     }

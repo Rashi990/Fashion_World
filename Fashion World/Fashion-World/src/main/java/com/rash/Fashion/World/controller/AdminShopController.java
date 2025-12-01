@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.controller;
 
+import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.request.CreateShopRequest;
@@ -23,25 +24,25 @@ public class AdminShopController {
     private UserService userService;
 
     @PostMapping()
-    public ResponseEntity<Shop> createShop(
+    public ResponseEntity<ShopResponseDTO> createShop(
         @RequestBody CreateShopRequest request,
         @RequestHeader("Authorization") String jwt
         ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Shop shop = shopService.createShop(request, user);
+        ShopResponseDTO shop = shopService.createShop(request, user);
         return new ResponseEntity<>(shop, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Shop> updateShop(
+    public ResponseEntity<ShopResponseDTO> updateShop(
             @RequestBody CreateShopRequest request,
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Shop shop = shopService.updateShop(id, request);
+        ShopResponseDTO shop = shopService.updateShop(id, request);
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
@@ -60,25 +61,23 @@ public class AdminShopController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Shop> updateShopStatus(
+    public ResponseEntity<ShopResponseDTO> updateShopStatus(
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Shop shop = shopService.updateShopStatus(id);
-
+        ShopResponseDTO shop = shopService.updateShopStatus(id);
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Shop> findShopByUserId(
+    public ResponseEntity<ShopResponseDTO> findShopByUserId(
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Shop shop = shopService.getShopByUserId(user.getId());
-
+        ShopResponseDTO shop = shopService.getShopByUserId(user.getId());
         return new ResponseEntity<>(shop, HttpStatus.OK);
 
     }

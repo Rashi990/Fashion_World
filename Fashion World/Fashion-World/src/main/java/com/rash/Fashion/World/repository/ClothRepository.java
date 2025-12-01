@@ -11,7 +11,12 @@ public interface ClothRepository extends JpaRepository<Cloth, Long> {
 
     List<Cloth> findByShopId(Long shopId);
 
-    @Query("SELECT c FROM Cloth c WHERE c.clothName LIKE %:keyword% OR c.clothCategory.categoryName LIKE %:keyword%")
+    @Query("""
+        SELECT c FROM Cloth c
+        WHERE LOWER(c.clothName) LIKE :keyword
+        OR (c.clothCategory IS NOT NULL AND LOWER(c.clothCategory.categoryName) LIKE :keyword)
+    """)
     List<Cloth> searchCloth(@Param("keyword") String keyword);
+
 
 }

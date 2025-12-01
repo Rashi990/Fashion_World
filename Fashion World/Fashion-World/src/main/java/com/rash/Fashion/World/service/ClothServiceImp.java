@@ -1,10 +1,12 @@
 package com.rash.Fashion.World.service;
 
+import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Cloth;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.repository.ClothRepository;
 import com.rash.Fashion.World.request.CreateClothRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ public class ClothServiceImp implements ClothService{
 
     @Autowired
     private ClothRepository clothRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public Cloth createCloth(CreateClothRequest request, Category category, Shop shop) {
@@ -82,12 +87,11 @@ public class ClothServiceImp implements ClothService{
     }
 
     private List<Cloth> filterByCategory(List<Cloth> cloths, String clothCategory) {
-        return cloths.stream().filter(cloth -> {
-            if (cloth.getClothCategory()!=null){
-                return cloth.getClothCategory().getCategoryName().equals(clothCategory);
-            }
-            return false;
-        }).collect(Collectors.toList());
+        String lowerCategory = clothCategory.toLowerCase();
+        return cloths.stream()
+                .filter(cloth -> cloth.getClothCategory() != null &&
+                        cloth.getClothCategory().getCategoryName().toLowerCase().equals(lowerCategory))
+                .collect(Collectors.toList());
     }
 
     private List<Cloth> filterByMale(List<Cloth> cloths) {
@@ -98,10 +102,18 @@ public class ClothServiceImp implements ClothService{
         return cloths.stream().filter(cloth -> cloth.isFemale()).collect(Collectors.toList());
     }
 
+//    @Override
+//    public List<Cloth> searchCloth(String keyword) {
+//        return clothRepository.searchCloth(keyword);
+//    }
     @Override
     public List<Cloth> searchCloth(String keyword) {
-        return clothRepository.searchCloth(keyword);
-    }
+    if (keyword == null || keyword.isEmpty()) return List.of();
+
+    String kw = "%" + keyword.toLowerCase() + "%"; // wrap with % for LIKE
+    return clothRepository.searchCloth(kw);
+}
+
 
     @Override
     public Cloth findClothById(Long clothId) throws Exception {

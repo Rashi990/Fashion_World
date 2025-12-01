@@ -1,6 +1,7 @@
 package com.rash.Fashion.World.controller;
 
 import com.rash.Fashion.World.dto.ShopDTO;
+import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.request.CreateShopRequest;
@@ -24,34 +25,34 @@ public class ShopController {
     private UserService userService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<Shop>> searchShop(
+    public ResponseEntity<List<ShopResponseDTO>> searchShop(
             @RequestHeader("Authorization") String jwt,
             @RequestParam String keyword
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        List<Shop> shop = shopService.searchShop(keyword);
+        List<ShopResponseDTO> shop = shopService.searchShop(keyword);
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Shop>> getAllShops(
+    public ResponseEntity<List<ShopResponseDTO>> getAllShops(
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        List<Shop> shop = shopService.getAllShops();
+        List<ShopResponseDTO> shop = shopService.getAllShops();
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Shop> findShopById(
+    public ResponseEntity<ShopResponseDTO> findShopById(
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
             ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Shop shop = shopService.findShopById(id);
+        ShopResponseDTO shop = shopService.getShopByUserId(id);
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 

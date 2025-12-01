@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.controller;
 
+import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.model.User;
@@ -41,7 +42,7 @@ public class CategoryController {
             @RequestHeader("Authorization")String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Shop shop = shopService.getShopByUserId(user.getId());
+        ShopResponseDTO shop = shopService.getShopByUserId(user.getId());
         List<Category> categories = categoryService.findCategoryByShopId(shop.getId());
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
