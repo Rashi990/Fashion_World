@@ -1,4 +1,4 @@
-package com.rash.Fashion.World.service;
+package com.rash.Fashion.World.service.serviceImp;
 
 import com.rash.Fashion.World.dto.ShopDTO;
 import com.rash.Fashion.World.dto.ShopResponseDTO;
@@ -9,6 +9,7 @@ import com.rash.Fashion.World.repository.AddressRepository;
 import com.rash.Fashion.World.repository.ShopRepository;
 import com.rash.Fashion.World.repository.UserRepository;
 import com.rash.Fashion.World.request.CreateShopRequest;
+import com.rash.Fashion.World.service.ShopService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ShopServiceImp implements ShopService{
+public class ShopServiceImp implements ShopService {
 
     @Autowired
     private ShopRepository shopRepository;
@@ -102,7 +103,7 @@ public class ShopServiceImp implements ShopService{
         List<Shop> shops = shopRepository.findBySearchQuery(keyword);
         return convertToDTOList(shops);
     }
-    
+
     @Override
     public ShopResponseDTO findShopById(Long id) throws Exception {
         return convertToDTO(findShopByIdEntity(id));

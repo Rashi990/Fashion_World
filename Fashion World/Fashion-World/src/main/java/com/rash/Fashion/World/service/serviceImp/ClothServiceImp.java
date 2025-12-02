@@ -1,4 +1,4 @@
-package com.rash.Fashion.World.service;
+package com.rash.Fashion.World.service.serviceImp;
 
 import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
@@ -6,6 +6,7 @@ import com.rash.Fashion.World.model.Cloth;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.repository.ClothRepository;
 import com.rash.Fashion.World.request.CreateClothRequest;
+import com.rash.Fashion.World.service.ClothService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ClothServiceImp implements ClothService{
+public class ClothServiceImp implements ClothService {
 
     @Autowired
     private ClothRepository clothRepository;

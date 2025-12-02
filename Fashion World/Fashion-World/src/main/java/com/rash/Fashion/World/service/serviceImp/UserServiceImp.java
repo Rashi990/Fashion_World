@@ -1,13 +1,14 @@
-package com.rash.Fashion.World.service;
+package com.rash.Fashion.World.service.serviceImp;
 
 import com.rash.Fashion.World.config.JwtProvider;
 import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.repository.UserRepository;
+import com.rash.Fashion.World.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
 
     @Autowired
     UserRepository userRepository;
