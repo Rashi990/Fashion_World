@@ -50,9 +50,9 @@ public class ShopController {
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
             ) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+        userService.findUserByJwtToken(jwt);
 
-        ShopResponseDTO shop = shopService.getShopByUserId(id);
+        ShopResponseDTO shop = shopService.findShopById(id);
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 

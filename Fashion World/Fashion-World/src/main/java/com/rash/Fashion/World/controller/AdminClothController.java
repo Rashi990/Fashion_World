@@ -38,7 +38,7 @@ public class AdminClothController {
             @RequestBody CreateClothRequest request,
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
-        Shop shop = shopService.findShopById(request.getShopId());
+        Shop shop = shopService.findShopByIdEntity(request.getShopId());
 
         // Fetch category by ID
         Category category = categoryService.findCategoryById(request.getClothCategoryId());

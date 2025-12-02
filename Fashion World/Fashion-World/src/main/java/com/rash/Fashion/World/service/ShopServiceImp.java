@@ -32,16 +32,17 @@ public class ShopServiceImp implements ShopService{
     @Autowired
     private ModelMapper modelMapper;
 
+//    DTO Conversion
     // Convert Entity → DTO
-    private ShopResponseDTO convertToDTO(Shop shop){
+    public ShopResponseDTO convertToDTO(Shop shop){
         return modelMapper.map(shop, ShopResponseDTO.class);
     }
-
     // Convert Entity List → DTO List
-    private List<ShopResponseDTO> convertToDTOList(List<Shop> shops) {
+    public List<ShopResponseDTO> convertToDTOList(List<Shop> shops) {
         return shops.stream().map(this::convertToDTO).toList();
     }
 
+//    Controller-facing methods
     @Override
     public ShopResponseDTO createShop(CreateShopRequest request, User user) {
 
@@ -66,17 +67,17 @@ public class ShopServiceImp implements ShopService{
     @Override
     public ShopResponseDTO updateShop(Long shopId, CreateShopRequest updatedShop) throws Exception {
 
-        Shop shop = findShopById(shopId);
+        Shop shop = findShopByIdEntity(shopId);
 
-        if (shop.getType()!=null){
+        if (updatedShop.getType()!=null){
             shop.setType(updatedShop.getType());
         }
 
-        if (shop.getDescription()!=null){
+        if (updatedShop.getDescription()!=null){
             shop.setDescription(updatedShop.getDescription());
         }
 
-        if (shop.getShopName()!=null){
+        if (updatedShop.getShopName()!=null){
             shop.setShopName(updatedShop.getShopName());
         }
 
@@ -86,7 +87,7 @@ public class ShopServiceImp implements ShopService{
 
     @Override
     public void deleteShop(Long shopId) throws Exception {
-        Shop shop = findShopById(shopId);
+        Shop shop = findShopByIdEntity(shopId);
         shopRepository.delete(shop);
     }
 
@@ -101,15 +102,10 @@ public class ShopServiceImp implements ShopService{
         List<Shop> shops = shopRepository.findBySearchQuery(keyword);
         return convertToDTOList(shops);
     }
-
+    
     @Override
-    public Shop findShopById(Long id) throws Exception {
-        Optional<Shop> opt = shopRepository.findById(id);
-
-        if (opt.isEmpty()){
-            throw new Exception("Shop not found with id"+id);
-        }
-        return opt.get();
+    public ShopResponseDTO findShopById(Long id) throws Exception {
+        return convertToDTO(findShopByIdEntity(id));
     }
 
     @Override
@@ -122,31 +118,15 @@ public class ShopServiceImp implements ShopService{
     }
 
     @Override
-    public Shop getShopEntityByUserId(Long userId) throws Exception {
-        Shop shop = shopRepository.findByOwnerId(userId);
-
-        if (shop == null) {
-            throw new Exception("Shop not found with owner id " + userId);
-        }
-        return shop;  // returning entity
-    }
-
-
-    @Override
     public ShopDTO addFavourites(Long shopId, User user) throws Exception {
 
-        Shop shop = findShopById(shopId);
+        Shop shop = findShopByIdEntity(shopId);
 
         ShopDTO shopDTO = new ShopDTO();
         shopDTO.setDescription(shop.getDescription());
         shopDTO.setTitle(shop.getShopName());
         shopDTO.setImages(shop.getImages());
         shopDTO.setId(shopId);
-
-//        if (user.getFavorites().contains(shopDTO)){
-//            user.getFavorites().remove(shopDTO);
-//        }
-//        else user.getFavorites().add(shopDTO);
 
         boolean isFavorited = false;
         List<ShopDTO> favorites = user.getFavorites();
@@ -170,9 +150,28 @@ public class ShopServiceImp implements ShopService{
     @Override
     public ShopResponseDTO updateShopStatus(Long id) throws Exception {
 
-        Shop shop = findShopById(id);
+        Shop shop = findShopByIdEntity(id);
         shop.setOpen(!shop.isOpen());
         shopRepository.save(shop);
         return convertToDTO(shop);
+    }
+
+
+//    Entity-level methods (internal use)
+    @Override
+    public Shop findShopByIdEntity(Long id) throws Exception {
+        Optional<Shop> shop = shopRepository.findById(id);
+        if (shop.isEmpty()) throw new Exception("Shop not found with id " + id);
+        return shop.get();
+    }
+
+    @Override
+    public Shop getShopEntityByUserId(Long userId) throws Exception {
+        Shop shop = shopRepository.findByOwnerId(userId);
+
+        if (shop == null) {
+            throw new Exception("Shop not found with owner id " + userId);
+        }
+        return shop;  // returning entity
     }
 }

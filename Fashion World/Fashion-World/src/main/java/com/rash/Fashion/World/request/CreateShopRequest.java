@@ -8,8 +8,9 @@ import java.util.List;
 
 @Data
 public class CreateShopRequest {
+//    This DTO is only for creating/updating a shop
 
-    private Long id;
+//    private Long id;
     private String shopName;
     private String description;
     private Address address;

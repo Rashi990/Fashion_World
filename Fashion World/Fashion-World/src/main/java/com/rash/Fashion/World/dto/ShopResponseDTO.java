@@ -18,10 +18,8 @@ public class ShopResponseDTO {
     private String shopName;
     private String description;
     private String type;
-
     private Address address;
     private ContactInformation contactInformation;
-
     private String openingHours;
     private List<String> images;
     private boolean open;

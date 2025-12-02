@@ -34,7 +34,7 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public List<Category> findCategoryByShopId(Long id) throws Exception {
-        Shop shop = shopService.findShopById(id);
+        Shop shop = shopService.findShopByIdEntity(id);
         return categoryRepository.findByShopId(shop.getId());
     }
 
