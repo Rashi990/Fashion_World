@@ -61,15 +61,12 @@ public class ClothServiceImp implements ClothService {
         }
 
         Cloth savedCloth = clothRepository.save(cloth);
-//        shop.getCloths().add(savedCloth);
         return convertToDTO(savedCloth);
 
-//        return savedCloth;
     }
 
     @Override
     public void deleteCloth(Long clothId) throws Exception {
-
         Cloth cloth = findClothById(clothId);
         cloth.setShop(null);
         clothRepository.save(cloth);
@@ -97,7 +94,6 @@ public class ClothServiceImp implements ClothService {
             cloths = filterByCategory(cloths,clothCategory);
         }
 
-//        return cloths;
         return cloths.stream().map(this::convertToDTO).toList();
     }
 
@@ -110,23 +106,22 @@ public class ClothServiceImp implements ClothService {
     }
 
     private List<Cloth> filterByMale(List<Cloth> cloths) {
-        return cloths.stream().filter(cloth -> cloth.isMale()).collect(Collectors.toList());
+        return cloths.stream()
+                .filter(cloth -> cloth.isMale())
+                .collect(Collectors.toList());
     }
 
     private List<Cloth> filterByFemale(List<Cloth> cloths) {
-        return cloths.stream().filter(cloth -> cloth.isFemale()).collect(Collectors.toList());
+        return cloths.stream()
+                .filter(cloth -> cloth.isFemale())
+                .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<Cloth> searchCloth(String keyword) {
-//        return clothRepository.searchCloth(keyword);
-//    }
     @Override
     public List<ClothResponseDTO> searchCloth(String keyword) {
     if (keyword == null || keyword.isEmpty()) return List.of();
 
     String kw = "%" + keyword.toLowerCase() + "%"; // wrap with % for LIKE
-//    return clothRepository.searchCloth(kw);
 
         return clothRepository.searchCloth(kw)
                 .stream()
@@ -147,7 +142,6 @@ public class ClothServiceImp implements ClothService {
     public ClothResponseDTO updateAvailability(Long clothId) throws Exception {
         Cloth cloth = findClothById(clothId);
         cloth.setAvailable(!cloth.isAvailable());
-//        return clothRepository.save(cloth);
         return convertToDTO(clothRepository.save(cloth));
     }
 }
