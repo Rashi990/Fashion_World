@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.controller;
 
+import com.rash.Fashion.World.dto.ClothResponseDTO;
 import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Cloth;
@@ -34,7 +35,7 @@ public class AdminClothController {
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Cloth> createCloth(
+    public ResponseEntity<ClothResponseDTO> createCloth(
             @RequestBody CreateClothRequest request,
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
@@ -43,7 +44,7 @@ public class AdminClothController {
         // Fetch category by ID
         Category category = categoryService.findCategoryById(request.getClothCategoryId());
 
-        Cloth cloth = clothService.createCloth(request,category,shop);
+        ClothResponseDTO cloth = clothService.createCloth(request,category,shop);
         return new ResponseEntity<>(cloth, HttpStatus.CREATED);
     }
 
@@ -62,12 +63,12 @@ public class AdminClothController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cloth> updateClothAvailabilityStatus(
+    public ResponseEntity<ClothResponseDTO> updateClothAvailabilityStatus(
             @PathVariable Long id,
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
 
-        Cloth cloth = clothService.updateAvailability(id);
+        ClothResponseDTO cloth = clothService.updateAvailability(id);
 
         return new ResponseEntity<>(cloth, HttpStatus.OK);
     }

@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.service.serviceImp;
 
+import com.rash.Fashion.World.dto.ClothResponseDTO;
 import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Cloth;
@@ -24,8 +25,19 @@ public class ClothServiceImp implements ClothService {
     @Autowired
     private ModelMapper modelMapper;
 
+    // Convert Entity → DTO
+    private ClothResponseDTO convertToDTO(Cloth cloth){
+        ClothResponseDTO dto = modelMapper.map(cloth, ClothResponseDTO.class);
+
+        if(cloth.getClothCategory() != null){
+            dto.setCategoryName(cloth.getClothCategory().getCategoryName());
+        }
+
+        return dto;
+    }
+
     @Override
-    public Cloth createCloth(CreateClothRequest request, Category category, Shop shop) {
+    public ClothResponseDTO createCloth(CreateClothRequest request, Category category, Shop shop) {
         Cloth cloth = new Cloth();
         cloth.setClothCategory(category);
         cloth.setShop(shop);
@@ -49,9 +61,10 @@ public class ClothServiceImp implements ClothService {
         }
 
         Cloth savedCloth = clothRepository.save(cloth);
-        shop.getCloths().add(savedCloth);
+//        shop.getCloths().add(savedCloth);
+        return convertToDTO(savedCloth);
 
-        return savedCloth;
+//        return savedCloth;
     }
 
     @Override
@@ -63,7 +76,7 @@ public class ClothServiceImp implements ClothService {
     }
 
     @Override
-    public List<Cloth> getShopsCloth(
+    public List<ClothResponseDTO> getShopsCloth(
             Long shopId,
             boolean isMale,
             boolean isFemale,
@@ -84,7 +97,8 @@ public class ClothServiceImp implements ClothService {
             cloths = filterByCategory(cloths,clothCategory);
         }
 
-        return cloths;
+//        return cloths;
+        return cloths.stream().map(this::convertToDTO).toList();
     }
 
     private List<Cloth> filterByCategory(List<Cloth> cloths, String clothCategory) {
@@ -108,14 +122,17 @@ public class ClothServiceImp implements ClothService {
 //        return clothRepository.searchCloth(keyword);
 //    }
     @Override
-    public List<Cloth> searchCloth(String keyword) {
+    public List<ClothResponseDTO> searchCloth(String keyword) {
     if (keyword == null || keyword.isEmpty()) return List.of();
 
     String kw = "%" + keyword.toLowerCase() + "%"; // wrap with % for LIKE
-    return clothRepository.searchCloth(kw);
+//    return clothRepository.searchCloth(kw);
+
+        return clothRepository.searchCloth(kw)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
 }
-
-
     @Override
     public Cloth findClothById(Long clothId) throws Exception {
         Optional<Cloth> optionalCloth = clothRepository.findById(clothId);
@@ -127,9 +144,10 @@ public class ClothServiceImp implements ClothService {
     }
 
     @Override
-    public Cloth updateAvailability(Long clothId) throws Exception {
+    public ClothResponseDTO updateAvailability(Long clothId) throws Exception {
         Cloth cloth = findClothById(clothId);
         cloth.setAvailable(!cloth.isAvailable());
-        return clothRepository.save(cloth);
+//        return clothRepository.save(cloth);
+        return convertToDTO(clothRepository.save(cloth));
     }
 }

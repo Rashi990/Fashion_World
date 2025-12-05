@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.service;
 
+import com.rash.Fashion.World.dto.ClothResponseDTO;
 import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Cloth;
@@ -10,21 +11,21 @@ import java.util.List;
 
 public interface ClothService {
 
-    public Cloth createCloth(CreateClothRequest request, Category category, Shop shop);
+    public ClothResponseDTO createCloth(CreateClothRequest request, Category category, Shop shop);
 
     void deleteCloth(Long clothId) throws Exception;
 
-    public List<Cloth> getShopsCloth(
+    public List<ClothResponseDTO> getShopsCloth(
             Long shopId,
             boolean isMale,
             boolean isFemale,
             String clothCategory
     );
 
-    public List<Cloth> searchCloth(String keyword);
+    public List<ClothResponseDTO> searchCloth(String keyword);
 
-    public Cloth findClothById(Long clothId) throws Exception;
+    public Cloth findClothById(Long clothId) throws Exception; // entity allowed internally
 
-    public Cloth updateAvailability(Long clothId) throws Exception;
+    public ClothResponseDTO updateAvailability(Long clothId) throws Exception;
 
 }

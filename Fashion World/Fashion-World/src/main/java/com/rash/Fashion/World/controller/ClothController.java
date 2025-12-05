@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.controller;
 
+import com.rash.Fashion.World.dto.ClothResponseDTO;
 import com.rash.Fashion.World.model.Cloth;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.model.User;
@@ -28,7 +29,7 @@ public class ClothController {
     private ShopService shopService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<Cloth>> searchCloth(
+    public ResponseEntity<List<ClothResponseDTO>> searchCloth(
             @RequestParam String name,
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
@@ -38,13 +39,13 @@ public class ClothController {
         }
 
         String keyword = name.trim(); // no need to lowercase here; handled in service
-        List<Cloth> cloths = clothService.searchCloth(keyword);
+        List<ClothResponseDTO> cloths = clothService.searchCloth(keyword);
 
         return new ResponseEntity<>(cloths, HttpStatus.OK);
     }
 
     @GetMapping("/shop/{shopId}")
-    public ResponseEntity<List<Cloth>> getShopCloth(
+    public ResponseEntity<List<ClothResponseDTO>> getShopCloth(
             @RequestParam(required = false) boolean male,
             @RequestParam(required = false) boolean female,
             @RequestParam(required = false) String cloth_category,
@@ -52,7 +53,7 @@ public class ClothController {
             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
 
-        List<Cloth> cloths = clothService.getShopsCloth(shopId,male,female,cloth_category);
+        List<ClothResponseDTO> cloths = clothService.getShopsCloth(shopId,male,female,cloth_category);
 
         return new ResponseEntity<>(cloths, HttpStatus.OK);
     }
