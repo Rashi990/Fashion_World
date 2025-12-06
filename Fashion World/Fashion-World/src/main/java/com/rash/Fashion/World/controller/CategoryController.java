@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.controller;
 
+import com.rash.Fashion.World.dto.CategoryResponseDTO;
 import com.rash.Fashion.World.dto.ShopResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Shop;
@@ -28,22 +29,22 @@ public class CategoryController {
     private ShopService shopService;
 
     @PostMapping("/admin/category")
-    public ResponseEntity<Category> createCategory(
+    public ResponseEntity<CategoryResponseDTO> createCategory(
             @RequestBody Category category,
             @RequestHeader("Authorization")String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        Category createdCategory = categoryService.createCategory(category.getCategoryName(), user.getId());
+        CategoryResponseDTO createdCategory = categoryService.createCategory(category.getCategoryName(), user.getId());
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
 
     @GetMapping("/category/shop")
-    public ResponseEntity<List<Category>> getShopCategory(
+    public ResponseEntity<List<CategoryResponseDTO>> getShopCategory(
             @RequestHeader("Authorization")String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
         ShopResponseDTO shop = shopService.getShopByUserId(user.getId());
-        List<Category> categories = categoryService.findCategoryByShopId(shop.getId());
+        List<CategoryResponseDTO> categories = categoryService.findCategoryByShopId(shop.getId());
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

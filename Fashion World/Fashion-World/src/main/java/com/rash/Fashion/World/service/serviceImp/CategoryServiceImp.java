@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.service.serviceImp;
 
+import com.rash.Fashion.World.dto.CategoryResponseDTO;
 import com.rash.Fashion.World.model.Category;
 import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.repository.CategoryRepository;
@@ -24,20 +25,31 @@ public class CategoryServiceImp implements CategoryService {
     @Autowired
     private ModelMapper modelMapper;
 
+//    DTO Converter
+    private CategoryResponseDTO convertToDTO(Category category){
+        return modelMapper.map(category,CategoryResponseDTO.class);
+    }
+
     @Override
-    public Category createCategory(String name, Long userId) throws Exception{
+    public CategoryResponseDTO createCategory(String name, Long userId) throws Exception{
         Shop shop = shopService.getShopEntityByUserId(userId);
 
         Category category = new Category();
         category.setCategoryName(name);
         category.setShop(shop);
-        return categoryRepository.save(category);
+
+        Category savedCategory = categoryRepository.save(category);
+        return convertToDTO(savedCategory);
     }
 
     @Override
-    public List<Category> findCategoryByShopId(Long id) throws Exception {
+    public List<CategoryResponseDTO> findCategoryByShopId(Long id) throws Exception {
         Shop shop = shopService.findShopByIdEntity(id);
-        return categoryRepository.findByShopId(shop.getId());
+
+        return categoryRepository.findByShopId(shop.getId())
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     @Override
