@@ -6,6 +6,7 @@ import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.repository.CategoryRepository;
 import com.rash.Fashion.World.service.CategoryService;
 import com.rash.Fashion.World.service.ShopService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CategoryServiceImp implements CategoryService {
 
     @Autowired

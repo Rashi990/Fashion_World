@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin/shop")
-
+@CrossOrigin
 public class AdminShopController {
 
     @Autowired

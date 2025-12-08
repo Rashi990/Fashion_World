@@ -10,6 +10,7 @@ import com.rash.Fashion.World.repository.ShopRepository;
 import com.rash.Fashion.World.repository.UserRepository;
 import com.rash.Fashion.World.request.CreateShopRequest;
 import com.rash.Fashion.World.service.ShopService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ShopServiceImp implements ShopService {
 
     @Autowired

@@ -4,10 +4,12 @@ import com.rash.Fashion.World.config.JwtProvider;
 import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.repository.UserRepository;
 import com.rash.Fashion.World.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserServiceImp implements UserService {
 
     @Autowired

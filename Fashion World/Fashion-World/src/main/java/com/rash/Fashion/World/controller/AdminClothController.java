@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin/cloths")
+@CrossOrigin
 public class AdminClothController {
 
     @Autowired

@@ -8,6 +8,7 @@ import com.rash.Fashion.World.model.Shop;
 import com.rash.Fashion.World.repository.ClothRepository;
 import com.rash.Fashion.World.request.CreateClothRequest;
 import com.rash.Fashion.World.service.ClothService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ClothServiceImp implements ClothService {
 
     @Autowired
