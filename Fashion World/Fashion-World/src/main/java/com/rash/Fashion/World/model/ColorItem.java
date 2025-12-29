@@ -22,6 +22,6 @@ public class ColorItem {
     @ManyToOne
     private Shop shop;
 
-    private boolean inStoke = true;
+    private boolean inStock = true;
 
 }
