@@ -18,13 +18,13 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @PutMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<CartItemDTO> addItemToCart(
             @RequestBody AddCartItemRequest request,
             @RequestHeader("Authorization") String jwt
             ) throws Exception{
         CartItemDTO cartItemDTO = cartService.addItemToCart(request, jwt);
-        return new ResponseEntity<>(cartItemDTO, HttpStatus.OK);
+        return new ResponseEntity<>(cartItemDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
