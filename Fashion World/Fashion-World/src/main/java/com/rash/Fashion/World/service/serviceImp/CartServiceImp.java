@@ -153,10 +153,13 @@ public class CartServiceImp implements CartService {
         }
         CartItem item = cartItemOptional.get();
         item.setQuantity(quantity);
-
         item.setTotalPrice(item.getCloth().getPrice()*quantity);
 
+        Cart cart = item.getCart();
+        cart.setTotal(calculateCartTotal(cart));
+
         cartItemRepository.save(item);
+        cartRepository.save(cart);
 
         return convertCartItemToDTO(item);
     }
