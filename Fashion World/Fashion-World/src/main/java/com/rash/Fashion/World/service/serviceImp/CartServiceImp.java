@@ -35,7 +35,9 @@ public class CartServiceImp implements CartService {
     @Autowired
     private ModelMapper modelMapper;
 
-    //    DTO Converters
+//    DTO Conversion
+
+    // Converts CartItem entity to CartItemDTO
     private CartItemDTO convertCartItemToDTO(CartItem item) {
         return new CartItemDTO(
                 item.getId(),
@@ -48,6 +50,7 @@ public class CartServiceImp implements CartService {
         );
     }
 
+    // Coverts Cart entity to CartDTO
     private CartDTO convertCartToDTO(Cart cart) {
         return new CartDTO(
                 cart.getId(),
@@ -57,52 +60,16 @@ public class CartServiceImp implements CartService {
         );
     }
 
-//    @Override
-//    public CartItemDTO addItemToCart(AddCartItemRequest request, String jwt) throws Exception {
-//        User user = userService.findUserByJwtToken(jwt);
-//        Cloth cloth = clothService.findClothById(request.getClothId());
-//
-//        Cart cart = cartRepository.findByCustomerId(user.getId())
-//                .orElseGet(() -> {
-//                    Cart newCart = new Cart();
-//                    newCart.setCustomer(user);
-//                    newCart.setTotal(0L);
-//                    return cartRepository.save(newCart);
-//                });
-//
-//        // Check if cloth already exists in cart
-//        for (CartItem item : cart.getItem()) {
-//            if (item.getCloth().getId().equals(cloth.getId())) {
-//                item.setQuantity(item.getQuantity() + request.getQuantity());
-//                item.setTotalPrice(item.getQuantity() * cloth.getPrice());
-//                cart.setTotal(calculateCartTotal(cart));
-//                return convertCartItemToDTO(cartItemRepository.save(item));
-//            }
-//        }
-//
-//        // New cart item
-//        CartItem newItem = new CartItem();
-//        newItem.setCart(cart);
-//        newItem.setCloth(cloth);
-//        newItem.setQuantity(request.getQuantity());
-//        newItem.setTotalPrice(request.getQuantity() * cloth.getPrice());
-//
-//        cart.getItem().add(newItem);
-//        cart.setTotal(calculateCartTotal(cart));
-//
-//        cartItemRepository.save(newItem);
-//        cartRepository.save(cart);
-//
-//        return convertCartItemToDTO(newItem);
-//    }
+//    Service Methods
 
+    // Add new item to cart
     @Override
     public CartItemDTO addItemToCart(AddCartItemRequest request, String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Cloth cloth = clothService.findClothById(request.getClothId());
-
         Cart cart = cartRepository.findByCustomerId(user.getId());
 
+        // Check if item already exists in cart
         for (CartItem cartItem : cart.getItem()){
             if (cartItem.getCloth().equals(cloth)){
                 int newQuantity = cartItem.getQuantity()+ request.getQuantity();
@@ -110,13 +77,14 @@ public class CartServiceImp implements CartService {
             }
         }
 
-        // New cart item
+        // Create new cart item
         CartItem newItem = new CartItem();
         newItem.setCart(cart);
         newItem.setCloth(cloth);
         newItem.setQuantity(request.getQuantity());
         newItem.setTotalPrice(request.getQuantity() * cloth.getPrice());
 
+        // Add item to cart and recalculate total
         cart.getItem().add(newItem);
         cart.setTotal(calculateCartTotal(cart));
 
@@ -126,24 +94,7 @@ public class CartServiceImp implements CartService {
         return convertCartItemToDTO(newItem);
     }
 
-//    @Override
-//    public CartItemDTO updateCartItemQuantity(Long cartItemId, int quantity) throws Exception {
-//
-//        CartItem item = cartItemRepository.findById(cartItemId)
-//                .orElseThrow(()-> new Exception("Cart item not found"));
-//
-//        item.setQuantity(quantity);
-//        item.setTotalPrice(quantity*item.getCloth().getPrice());
-//
-//        Cart cart = item.getCart();
-//        cart.setTotal(calculateCartTotal(cart));
-//
-//        cartItemRepository.save(item);
-//        cartRepository.save(cart);
-//
-//        return convertCartItemToDTO(item);
-//    }
-
+    // Update quantity of a cart item and recalculates cart total
     @Override
     public CartItemDTO updateCartItemQuantity(Long cartItemId, int quantity) throws Exception {
 
@@ -155,6 +106,7 @@ public class CartServiceImp implements CartService {
         item.setQuantity(quantity);
         item.setTotalPrice(item.getCloth().getPrice()*quantity);
 
+        // Update cart total after quantity change
         Cart cart = item.getCart();
         cart.setTotal(calculateCartTotal(cart));
 
@@ -164,53 +116,31 @@ public class CartServiceImp implements CartService {
         return convertCartItemToDTO(item);
     }
 
-//    @Override
-//    public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
-//
-//        User user = userService.findUserByJwtToken(jwt);
-//        Cart cart = cartRepository.findByCustomerId(user.getId())
-//                .orElseThrow(()->new Exception("Cart not found"));
-//
-//        CartItem cartItem = cartItemRepository.findById(cartItemId)
-//                .orElseThrow(()->new Exception("Cart item not found"));
-//
-//        cart.getItem().remove(cartItem);
-//        cartItemRepository.delete(cartItem);
-//
-//        cart.setTotal(calculateCartTotal(cart));
-//        cartRepository.save(cart);
-//
-//        return convertCartToDTO(cart);
-//    }
-@Override
-public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
+    // Remove an item from the cart
+    @Override
+    public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
 
-    User user = userService.findUserByJwtToken(jwt);
-    Cart cart = cartRepository.findByCustomerId(user.getId());
+        User user = userService.findUserByJwtToken(jwt);
+        Cart cart = cartRepository.findByCustomerId(user.getId());
 
-    Optional<CartItem> cartItemOptional = cartItemRepository.findById(cartItemId);
-    if (cartItemOptional.isEmpty()){
-        throw new Exception("Cart item not found");
+        Optional<CartItem> cartItemOptional = cartItemRepository.findById(cartItemId);
+        if (cartItemOptional.isEmpty()){
+            throw new Exception("Cart item not found");
+        }
+
+        CartItem cartItem = cartItemOptional.get();
+
+        // Remove item and update total
+        cart.getItem().remove(cartItem);
+        cartItemRepository.delete(cartItem);
+
+        cart.setTotal(calculateCartTotal(cart));
+        cartRepository.save(cart);
+
+        return convertCartToDTO(cart);
     }
 
-    CartItem cartItem = cartItemOptional.get();
-
-    cart.getItem().remove(cartItem);
-    cartItemRepository.delete(cartItem);
-
-    cart.setTotal(calculateCartTotal(cart));
-    cartRepository.save(cart);
-
-    return convertCartToDTO(cart);
-}
-
-//    @Override
-//    public Long calculateCartTotal(Cart cart){
-//        return cart.getItem().stream()
-//                .mapToLong(CartItem::getTotalPrice)
-//                .sum();
-//    }
-
+    // Calculate total price of the cart
     @Override
     public Long calculateCartTotal(Cart cart){
         Long total = 0L;
@@ -221,13 +151,7 @@ public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
         return total;
     }
 
-//    @Override
-//    public CartDTO findCartByID(Long id) throws Exception {
-//        Cart cart = cartRepository.findById(id)
-//                .orElseThrow(() -> new Exception("Cart not found"));
-//        return convertCartToDTO(cart);
-//    }
-
+    // Find cart by cart ID
     @Override
     public CartDTO findCartByID(Long id) throws Exception {
         Optional<Cart> optionalCart = cartRepository.findById(id);
@@ -238,13 +162,7 @@ public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
         return convertCartToDTO(optionalCart.get());
     }
 
-//    @Override
-//    public CartDTO findCartByUserId(Long userId) throws Exception {
-//        Cart cart = cartRepository.findByCustomerId(userId)
-//                .orElseThrow(() -> new Exception("Cart not found"));
-//        return convertCartToDTO(cart);
-//    }
-
+    // Find cart of currently logged-in user
     @Override
     public CartDTO findCartByUserId(String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
@@ -253,18 +171,7 @@ public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
         return convertCartToDTO(cart);
     }
 
-//    @Override
-//    public CartDTO clearCart(Long userId) throws Exception {
-//        Cart cart = cartRepository.findByCustomerId(userId)
-//                .orElseThrow(() -> new Exception("Cart not found"));
-//
-//        cart.getItem().clear();
-//        cart.setTotal(0L);
-//        cartRepository.save(cart);
-//
-//        return convertCartToDTO(cart);
-//    }
-
+    // Clear all items from the cart
     @Override
     public CartDTO clearCart(String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
