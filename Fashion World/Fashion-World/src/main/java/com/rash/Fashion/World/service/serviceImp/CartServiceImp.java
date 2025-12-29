@@ -193,9 +193,9 @@ public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
     CartItem cartItem = cartItemOptional.get();
 
     cart.getItem().remove(cartItem);
-//    cartItemRepository.delete(cartItem);
-//
-//    cart.setTotal(calculateCartTotal(cart));
+    cartItemRepository.delete(cartItem);
+
+    cart.setTotal(calculateCartTotal(cart));
     cartRepository.save(cart);
 
     return convertCartToDTO(cart);
@@ -268,7 +268,7 @@ public CartDTO removeCartItem(Long cartItemId, String jwt) throws Exception {
         Cart cart = cartRepository.findByCustomerId(user.getId());
 
         cart.getItem().clear();
-//        cart.setTotal(0L);
+        cart.setTotal(0L);
         cartRepository.save(cart);
 
         return convertCartToDTO(cart);
