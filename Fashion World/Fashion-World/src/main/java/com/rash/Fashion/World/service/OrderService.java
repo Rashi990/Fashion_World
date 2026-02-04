@@ -1,6 +1,7 @@
 package com.rash.Fashion.World.service;
 
 import com.rash.Fashion.World.dto.OrderDTO;
+import com.rash.Fashion.World.model.PurchaseOrder;
 import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.request.OrderRequest;
 
@@ -18,4 +19,5 @@ public interface OrderService {
 
     public List<OrderDTO> getShopsOrder(Long shopId, String orderStatus) throws Exception;
 
+    public OrderDTO findOrderById(Long orderId) throws Exception;
 }

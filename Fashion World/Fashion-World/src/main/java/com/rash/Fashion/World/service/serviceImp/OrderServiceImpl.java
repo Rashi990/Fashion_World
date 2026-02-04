@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -64,6 +66,11 @@ public class OrderServiceImpl implements OrderService {
                 order.getTotalItem(),
                 order.getItems().stream().map(this::convertOrderItemToDTO).toList()
         );
+    }
+
+    private PurchaseOrder getOrderEntity(Long orderId) throws Exception {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception("Order not found with id " + orderId));
     }
 
     @Override
@@ -120,21 +127,53 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO updateOrder(Long orderId, String orderStatus) throws Exception {
-        return null;
+
+        PurchaseOrder order = getOrderEntity(orderId);
+
+        if (!(orderStatus.equalsIgnoreCase("PENDING") ||
+                orderStatus.equalsIgnoreCase("COMPLETED") ||
+                orderStatus.equalsIgnoreCase("CANCELLED")))
+        {
+            throw new Exception("Please select a valid order status");
+        }
+        order.setOrderStatus(orderStatus.toUpperCase());
+        PurchaseOrder updatedOrder = orderRepository.save(order);
+        return convertOrderToDTO(updatedOrder);
     }
 
     @Override
     public void cancelOrder(Long orderId) throws Exception {
-
+        PurchaseOrder order = getOrderEntity(orderId);
+        order.setOrderStatus("CANCELLED");
+        orderRepository.save(order);
     }
 
     @Override
     public List<OrderDTO> getUsersOrder(Long userId) throws Exception {
-        return null;
+        List<PurchaseOrder> orders = orderRepository.findByCustomerId(userId);
+
+        return orders.stream()
+                .map(this::convertOrderToDTO)
+                .toList();
     }
 
     @Override
     public List<OrderDTO> getShopsOrder(Long shopId, String orderStatus) throws Exception {
-        return null;
+        List<PurchaseOrder> orders = orderRepository.findByShopId(shopId);
+
+        if (orderStatus!=null){
+            orders = orders.stream()
+                    .filter(order -> order.getOrderStatus().equalsIgnoreCase(orderStatus))
+                    .toList();
+        }
+        return orders.stream()
+                .map(this::convertOrderToDTO)
+                .toList();
+    }
+
+    @Override
+    public OrderDTO findOrderById(Long orderId) throws Exception {
+        PurchaseOrder order = getOrderEntity(orderId);
+        return convertOrderToDTO(order);
     }
 }
