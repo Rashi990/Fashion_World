@@ -2,9 +2,11 @@ package com.rash.Fashion.World.controller;
 
 import com.rash.Fashion.World.dto.CartDTO;
 import com.rash.Fashion.World.dto.CartItemDTO;
+import com.rash.Fashion.World.model.User;
 import com.rash.Fashion.World.request.AddCartItemRequest;
 import com.rash.Fashion.World.request.UpdateCartItemRequest;
 import com.rash.Fashion.World.service.CartService;
+import com.rash.Fashion.World.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/add")
     public ResponseEntity<CartItemDTO> addItemToCart(
@@ -49,7 +54,8 @@ public class CartController {
     public ResponseEntity<CartDTO> clearCart(
             @RequestHeader("Authorization") String jwt
     ) throws Exception{
-        CartDTO cartDTO = cartService.clearCart(jwt);
+        User user = userService.findUserByJwtToken(jwt);
+        CartDTO cartDTO = cartService.clearCart(user.getId());
         return new ResponseEntity<>(cartDTO,HttpStatus.OK);
     }
 
@@ -57,7 +63,8 @@ public class CartController {
     public ResponseEntity<CartDTO> findUserCart(
             @RequestHeader("Authorization") String jwt
     ) throws Exception{
-        CartDTO cartDTO = cartService.findCartByUserId(jwt);
+        User user = userService.findUserByJwtToken(jwt);
+        CartDTO cartDTO = cartService.findCartByUserId(user.getId());
         return new ResponseEntity<>(cartDTO,HttpStatus.OK);
     }
 

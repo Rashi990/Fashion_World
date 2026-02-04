@@ -15,7 +15,7 @@ public interface CartService {
  Long calculateCartTotal(Cart cart);
 
  public CartDTO findCartByID(Long id)throws Exception;
- public CartDTO findCartByUserId(String jwt)throws Exception;
- public CartDTO clearCart(String jwt)throws Exception;
+ public CartDTO findCartByUserId(Long userId)throws Exception;
+ public CartDTO clearCart(Long userId)throws Exception;
 
 }

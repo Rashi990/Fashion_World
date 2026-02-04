@@ -1,5 +1,6 @@
 package com.rash.Fashion.World.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,4 +24,9 @@ public class OrderItem {
     private int quantity;
     private Long totalPrice;
     private List<String> color;
+
+    @ManyToOne
+    @JsonIgnore
+    private PurchaseOrder order;
+
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,11 +34,14 @@ public class PurchaseOrder {
     @ManyToOne //many orders make on same address is possible, one order has only one address
     private Address deliveryAddress;
 
-    @OneToMany
-    private List<OrderItem> items;
+//    @OneToMany
+//    private List<OrderItem> items;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items = new ArrayList<>();
+
 
     private int totalItem;
-    private int totalPrice;
+    private Long totalPrice;
 
     //private Payment paymentMethod;
 
