@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Button, Container, IconButton, Menu, MenuItem, Box } f
 import MenuIcon from "@mui/icons-material/Menu";
 import { colors } from "../theme/colors";
 
-const pages = ["Home","Women", "Men", "Kids", "Beauty", "Accessories", "Sale", "About Us", "Contact Us"];
+const pages = ["Home","Women", "Men", "Kids", "Beauty", "Accessories", "Sale", "Shops", "About Us", "Contact Us"];
 
 function MenuBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -62,7 +62,7 @@ function MenuBar() {
                     fontSize: "0.98rem",
                     position: "relative",
                     "&:hover": {
-                        color: colors.primary,
+                        color: colors.blush,
                         background: "transparent",
                     },
                     "&::after": {

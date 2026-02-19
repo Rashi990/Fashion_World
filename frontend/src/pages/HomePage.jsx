@@ -10,10 +10,10 @@ function HomePage() {
 <div
   style={{
     background: `linear-gradient(
-      180deg,
-      ${colors.white} 0%,
-      ${colors.background} 40%,
-      #FFF0F7 100%
+      120deg,
+      ${colors.orchid} 0%,
+      ${colors.white} 35%,
+      ${colors.amethyst} 100%
     )`,
     minHeight: "100vh",
   }}
@@ -35,9 +35,10 @@ function HomePage() {
             <Typography
               variant="h3"
               sx={{
-                fontWeight: 700,
+                fontWeight: 800,
                 color: colors.textDark,
                 mb: 2,
+                lineHeight: 1.2,
               }}
             >
               Discover Your
@@ -49,7 +50,7 @@ function HomePage() {
                 color: colors.textGrey,
                 fontSize: "18px",
                 mb: 4,
-                lineHeight: 1.6,
+                lineHeight: 1.7,
               }}
             >
               Explore the latest trends in fashion. Dresses, shoes, accessories and more — everything you need to look amazing.
@@ -59,9 +60,10 @@ function HomePage() {
               variant="contained"
               sx={{
                 background: colors.primary,
-                padding: "12px 28px",
+                padding: "14px 34px",
                 fontSize: "16px",
                 borderRadius: "30px",
+                boxShadow: "0 8px 20px rgba(230,0,169,0.25)",
                 "&:hover": {
                   background: colors.primaryDark,
                 },

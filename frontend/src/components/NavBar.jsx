@@ -11,25 +11,33 @@ import Avatar from '@mui/material/Avatar';
 function NavBar() {
   return (
 
-    <nav className="navbar shadow-sm py-2" style={{ background: colors.navbar }}>
+    <nav 
+      className="navbar shadow-sm py-2" 
+      style={{ 
+        background: colors.lavender,
+        borderBottom: `px solid ${colors.periwinkle}`
+        }}>
+
       <div className="container-fluid d-flex align-items-center justify-content-between">
 
+{/* Logo */}
         <div className="d-flex align-items-center">
           <img src={logo} alt="logo" height="65" />
         </div>
 
+{/* Search bar */}
         <div
           className="d-none d-md-flex align-items-center"
           style={{
             width: "40%",
-            background: "#fff0f5",                 
-            borderRadius: "10px",
+            background: colors.white,                 
+            borderRadius: "30px",
             padding: "10px 20px",
-            border: `1px solid ${colors.primaryLight}`,
-            boxShadow: "0 2px 8px rgba(233,30,99,0.15)"
+            border: `1px solid ${colors.periwinkle}`,
+            boxShadow: "0 4px 14px rgba(156,37,184,0.25)"
           }}
         >
-          <SearchIcon sx={{ color: colors.primary, mr: 1, fontSize: 28 }} />
+          <SearchIcon sx={{ color: colors.primary, mr: 1, fontSize: 26 }} />
 
           <input
             type="text"
@@ -65,8 +73,8 @@ function NavBar() {
               <Avatar 
                 sx={{ 
                   bgcolor: colors.primary,
-                  width: 34,
-                  height: 34,
+                  width: 36,
+                  height: 36,
                   fontWeight: "bold"
                 }}
               >

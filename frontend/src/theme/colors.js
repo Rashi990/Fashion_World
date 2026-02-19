@@ -1,10 +1,17 @@
 export const colors = {
 
-  // BRAND COLORS 
-  primary: "#E600A9",        // main pink
-  primaryLight: "#FF4DC4",   // hover / highlights
-  primaryDark: "#B0007A",    // buttons / active states
-  accentPurple: "#7B1FA2",   // secondary accent
+  // MAIN BRAND COLORS 
+  primary: "#E600A9",
+  primaryLight: "#FF4DC4",
+  primaryDark: "#B0007A",
+  accentPurple: "#7B1FA2",
+
+  // SOFT PASTEL PALETTE 
+  amethyst: "#9C89B8",
+  blush: "#F0A6CA",
+  orchid: "#EFC3E6",
+  lavender: "#F0E6EF",
+  periwinkle: "#B8BEDD",
 
   // Header colors
   navbar: "#ffffff",
